@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "wcpdtoolbox"
+  site-url: "https://doucx.github.io/wcpdtoolbox"
+  description: "常用工具集合"
+  repo-branch: main
+  repo-url: "https://github.com/doucx/wcpdtoolbox"
