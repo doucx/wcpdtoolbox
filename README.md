@@ -19,7 +19,7 @@ pip install .
 ### 导入
 
 ``` python
-from wcpdtoolbox.[vision|model|data|ui] import *
+from wcpdtoolbox.vision import *
 ```
 
 各组件使用见nbs/notebook
