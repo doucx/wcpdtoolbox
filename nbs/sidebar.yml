@@ -1,0 +1,8 @@
+website:
+  sidebar:
+    contents:
+      - index.ipynb
+      - 00_vision.ipynb
+      - 01_model.ipynb
+      - 02_data.ipynb
+      - 03_UI.ipynb

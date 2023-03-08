@@ -6,7 +6,7 @@ __all__ = ['BasicLeaf']
 # %% ../nbs/01_model.ipynb 2
 from .imports import *
 
-# %% ../nbs/01_model.ipynb 5
+# %% ../nbs/01_model.ipynb 6
 class BasicLeaf():
     def __init__(self, *args, up=None, show_feature=False, all_leaf=None):
         self.up = up
