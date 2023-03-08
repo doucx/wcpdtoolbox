@@ -9,7 +9,9 @@ WcpDToolBox
 ## 安装
 
 ``` sh
-pip install wcpdtoolbox
+git clone https://github.com/doucx/wcpdtoolbox.git
+cd wcpdtoolbox
+pip install .
 ```
 
 ## 使用

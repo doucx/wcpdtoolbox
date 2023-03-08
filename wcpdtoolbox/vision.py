@@ -165,7 +165,7 @@ def load_video(src, # 视频路径,可以为本地地址或网络摄像头
     while True:
         if not((v.stopped) and q.empty() or ((t >= max_frame) if max_frame != None else False)):
             frame = q.get()
-            if not isinstance(frame, NoneType) : 
+            if not frame is None: 
                 l.append(frame[None,:])
                 t += 1
         else:
