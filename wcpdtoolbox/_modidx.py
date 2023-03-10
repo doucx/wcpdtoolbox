@@ -48,4 +48,11 @@ d = { 'settings': { 'branch': 'main',
                                     'wcpdtoolbox.vision.show_img': ('vision.html#show_img', 'wcpdtoolbox/vision.py'),
                                     'wcpdtoolbox.vision.show_img_xyz': ('vision.html#show_img_xyz', 'wcpdtoolbox/vision.py'),
                                     'wcpdtoolbox.vision.xyz2img': ('vision.html#xyz2img', 'wcpdtoolbox/vision.py')},
-            'wcpdtoolbox.visualization': {}}}
+            'wcpdtoolbox.visualization': { 'wcpdtoolbox.visualization.GradShowCallback': ( 'visualization.html#gradshowcallback',
+                                                                                           'wcpdtoolbox/visualization.py'),
+                                           'wcpdtoolbox.visualization.GradShowCallback.__init__': ( 'visualization.html#gradshowcallback.__init__',
+                                                                                                    'wcpdtoolbox/visualization.py'),
+                                           'wcpdtoolbox.visualization.GradShowCallback.after_fit': ( 'visualization.html#gradshowcallback.after_fit',
+                                                                                                     'wcpdtoolbox/visualization.py'),
+                                           'wcpdtoolbox.visualization.GradShowCallback.before_step': ( 'visualization.html#gradshowcallback.before_step',
+                                                                                                       'wcpdtoolbox/visualization.py')}}}
