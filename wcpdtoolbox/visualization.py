@@ -5,16 +5,29 @@ __all__ = ['GradShowCallback']
 
 # %% ../nbs/03_visualization.ipynb 3
 from .imports import *
+from plotly import graph_objects as go
 
 # %% ../nbs/03_visualization.ipynb 6
 class GradShowCallback(Callback):
-    def __init__(self, l): self.grad_list = l
+    def __init__(self,l=None, show=True):
+        self.grad_list = L() if l is None else l
+        self.show = show
     def before_step(self):
-        grads = L([to_detach(i.grad.abs().mean()) for i in self.learn.model.parameters()])
+        grads = []
+        for i in self.learn.model.parameters():
+            if not i.grad is None:
+                grads.append(to_detach(i.grad.abs().mean()))
+            else:
+                grads.append(tensor(0.))
         self.grad_list.append(grads)
     
     def after_fit(self):
+        if not self.show:
+            return
+        fig = go.Figure()
         name = [name for name, _ in self.learn.model.named_parameters()]
-        for name, i in zip(name,array(self.grad_list).T): plt.plot(i, label=name)
-        plt.legend()
-        plt.show()
+        arr = array(self.grad_list).T
+        x = np.arange(len(arr))
+        for a,n in zip(arr, name):
+            fig.add_trace(go.Scatter(x=x, y=a, name=n))
+        fig.show()
