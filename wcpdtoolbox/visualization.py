@@ -27,7 +27,7 @@ class GradShowCallback(Callback):
         fig = go.Figure()
         name = [name for name, _ in self.learn.model.named_parameters()]
         arr = array(self.grad_list).T
-        x = np.arange(len(arr))
+        x = np.arange(len(self.grad_list))
         for a,n in zip(arr, name):
             fig.add_trace(go.Scatter(x=x, y=a, name=n))
         fig.show()
