@@ -22,4 +22,4 @@ pip install .
 from wcpdtoolbox.all import *
 ```
 
-各组件使用见https://doucx.github.io/wcpdtoolbox
+各组件使用见[wcpdtoolbox](https://doucx.github.io/wcpdtoolbox)
