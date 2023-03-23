@@ -22,4 +22,4 @@ pip install .
 from wcpdtoolbox.all import *
 ```
 
-各组件使用见nbs/notebook
+各组件使用见https://doucx.github.io/wcpdtoolbox
