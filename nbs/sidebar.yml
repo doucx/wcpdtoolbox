@@ -7,4 +7,4 @@ website:
       - 02_data.ipynb
       - 03_visualization.ipynb
       - 04_audio.ipynb
-      - all.ipynb
+      - imports.ipynb
