@@ -2,15 +2,13 @@
 
 # %% auto 0
 __all__ = ['open_img_cv2', 'img2xyz', 'xyz2img', 'open_img_xyz', 'show_img', 'show_img_xyz', 'img_xyz_pipe', 'PickImg',
-           'VideoGet', 'load_video']
+           'VideoGet', 'load_video', 'get_pets_dataloaders', 'get_one_test_img']
 
 # %% ../nbs/00_vision.ipynb 3
 from .imports import *
 
 # %% ../nbs/00_vision.ipynb 7
-def open_img_cv2(path:str):
-    img = cv2.imread(str(path))
-    return img
+def open_img_cv2(path:str): return cv2.imread(str(path))
 
 # %% ../nbs/00_vision.ipynb 9
 def img2xyz(img:np.array):
@@ -48,7 +46,7 @@ def show_img_xyz(img:Tensor):
 # %% ../nbs/00_vision.ipynb 22
 def img_xyz_pipe(): return Transform(enc=open_img_xyz, dec=show_img_xyz)
 
-# %% ../nbs/00_vision.ipynb 25
+# %% ../nbs/00_vision.ipynb 27
 class PickImg(nn.Module):
     def __init__(self, device="cpu", return_grid=False,):
         super().__init__()
@@ -58,7 +56,7 @@ class PickImg(nn.Module):
         self.return_grid = return_grid
         # self.comb_grid = comb_grid
 
-# %% ../nbs/00_vision.ipynb 27
+# %% ../nbs/00_vision.ipynb 29
 @patch()
 def get_grid_mat(self:PickImg, val:Tensor=None):
     if val == None:
@@ -68,31 +66,31 @@ def get_grid_mat(self:PickImg, val:Tensor=None):
     s = torch.stack([s0, s1]).permute(2, 0, 1).reshape(-1, 2, 3)
     return s.to(self.device)
 
-# %% ../nbs/00_vision.ipynb 29
+# %% ../nbs/00_vision.ipynb 31
 @patch()
 def create_grid(self: PickImg, mats: Tensor, pick_size: list):
     pick_size = torch.Size(pick_size)
     return F.affine_grid(mats, pick_size).to(self.device)
 
-# %% ../nbs/00_vision.ipynb 31
+# %% ../nbs/00_vision.ipynb 33
 @patch()
 def create_grid_by_matval(self: PickImg, pick_size, matval: Tensor = None):
     # use mat val to create grid
     mats = self.get_grid_mat(matval)
     return self.create_grid(mats, pick_size).to(self.device)
 
-# %% ../nbs/00_vision.ipynb 33
+# %% ../nbs/00_vision.ipynb 35
 @patch()
 def create_basic_grid(self: PickImg, img: Tensor, pick_size: list):
     mat = self.get_grid_mat().repeat(img.shape[0], 1, 1).to(self.device)
     basic_grid = self.create_grid(mat, pick_size)
     return basic_grid.to(self.device)
 
-# %% ../nbs/00_vision.ipynb 35
+# %% ../nbs/00_vision.ipynb 37
 @patch()
 def create_img_with_grid(self:PickImg, img): return torch.hstack((self.create_basic_grid(img, img.size()).permute(0,3,1,2),img))
 
-# %% ../nbs/00_vision.ipynb 37
+# %% ../nbs/00_vision.ipynb 39
 @patch()
 def forward(self:PickImg,
             img:Tensor, # 4d img
@@ -120,7 +118,7 @@ def forward(self:PickImg,
     img = F.grid_sample(img, grid, padding_mode="reflection").to(self.device)
     return (img, grid) if self.return_grid else img
 
-# %% ../nbs/00_vision.ipynb 46
+# %% ../nbs/00_vision.ipynb 48
 class VideoGet:
     def __init__(self, 
                  src, # 视频路径,可以为本地地址或网络摄像头
@@ -151,7 +149,7 @@ class VideoGet:
     def stop(self):
         self.stopped = True
 
-# %% ../nbs/00_vision.ipynb 48
+# %% ../nbs/00_vision.ipynb 50
 def load_video(src, # 视频路径,可以为本地地址或网络摄像头
                max_frame=None # 队列与拾取的上限
               ):
@@ -172,3 +170,25 @@ def load_video(src, # 视频路径,可以为本地地址或网络摄像头
             v.stop()
             break
     return np.vstack(tuple(l))
+
+# %% ../nbs/00_vision.ipynb 56
+def get_pets_dataloaders(len_items=800, randomseed=42, item_tfms_size=460, batch_tfms_size=460, batch_tfms_min_scale=0.75, **kwarg):
+    path = untar_data(URLs.PETS)
+    pets = DataBlock(blocks = (ImageBlock, CategoryBlock),
+                     get_items=(lambda x:get_image_files(x)[:len_items]), 
+                     splitter=RandomSplitter(seed=randomseed),
+                     get_y=using_attr(RegexLabeller(r'(.+)_\d+.jpg$'), 'name'),
+                     item_tfms=Resize(item_tfms_size),
+                     batch_tfms=aug_transforms(size=batch_tfms_size, min_scale=batch_tfms_min_scale))
+    dls = pets.dataloaders(path/"images", **kwarg)
+    return dls
+
+# %% ../nbs/00_vision.ipynb 58
+def get_one_test_img(imgs=None):
+    pick_one = lambda l:l[random.randint(0, len(l)-1)]
+    if not imgs is None:
+        return open_img_xyz(pick_one(imgs))
+    else:
+        path = untar_data(URLs.PETS)
+        imgs = get_image_files(path/'images')
+        return open_img_xyz(pick_one(imgs))
