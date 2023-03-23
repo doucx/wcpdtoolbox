@@ -16,10 +16,4 @@ pip install .
 
 ## 使用
 
-### 导入
-
-``` python
-from wcpdtoolbox.all import *
-```
-
-各组件使用见[wcpdtoolbox](https://doucx.github.io/wcpdtoolbox)
+见[wcpdtoolbox](https://doucx.github.io/wcpdtoolbox)
