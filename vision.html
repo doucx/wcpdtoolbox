@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="对于图片/视频的处理">
+
+<title>wcpdtoolbox - vision</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="wcpdtoolbox - vision">
+<meta property="og:description" content="对于图片/视频的处理">
+<meta property="og:site-name" content="wcpdtoolbox">
+<meta name="twitter:title" content="wcpdtoolbox - vision">
+<meta name="twitter:description" content="对于图片/视频的处理">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">wcpdtoolbox</span>
+    </a>
+  </div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">vision</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">WcpDToolBox</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vision.html" class="sidebar-item-text sidebar-link active">vision</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./model.html" class="sidebar-item-text sidebar-link">Model</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data.html" class="sidebar-item-text sidebar-link">Data</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./visualization.html" class="sidebar-item-text sidebar-link">visualization</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./audio.html" class="sidebar-item-text sidebar-link">Audio</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#xyzimg" id="toc-xyzimg" class="nav-link active" data-scroll-target="#xyzimg">xyzimg</a>
+  <ul class="collapse">
+  <li><a href="#open_img_cv2" id="toc-open_img_cv2" class="nav-link" data-scroll-target="#open_img_cv2">open_img_cv2</a></li>
+  <li><a href="#bgr2xyz" id="toc-bgr2xyz" class="nav-link" data-scroll-target="#bgr2xyz">bgr2xyz</a></li>
+  <li><a href="#open_img_xyz" id="toc-open_img_xyz" class="nav-link" data-scroll-target="#open_img_xyz">open_img_xyz</a></li>
+  <li><a href="#xyz2rgb" id="toc-xyz2rgb" class="nav-link" data-scroll-target="#xyz2rgb">xyz2rgb</a></li>
+  <li><a href="#show_array_rgb_img" id="toc-show_array_rgb_img" class="nav-link" data-scroll-target="#show_array_rgb_img">show_array_rgb_img</a></li>
+  <li><a href="#show_xyz_img" id="toc-show_xyz_img" class="nav-link" data-scroll-target="#show_xyz_img">show_xyz_img</a></li>
+  <li><a href="#img_xyz_pipe" id="toc-img_xyz_pipe" class="nav-link" data-scroll-target="#img_xyz_pipe">img_xyz_pipe</a></li>
+  </ul></li>
+  <li><a href="#pickimg" id="toc-pickimg" class="nav-link" data-scroll-target="#pickimg">pickimg</a>
+  <ul class="collapse">
+  <li><a href="#pickimg-1" id="toc-pickimg-1" class="nav-link" data-scroll-target="#pickimg-1">PickImg</a></li>
+  <li><a href="#pickimg.get_grid_mat" id="toc-pickimg.get_grid_mat" class="nav-link" data-scroll-target="#pickimg.get_grid_mat">PickImg.get_grid_mat</a></li>
+  <li><a href="#pickimg.create_grid" id="toc-pickimg.create_grid" class="nav-link" data-scroll-target="#pickimg.create_grid">PickImg.create_grid</a></li>
+  <li><a href="#pickimg.create_grid_by_matval" id="toc-pickimg.create_grid_by_matval" class="nav-link" data-scroll-target="#pickimg.create_grid_by_matval">PickImg.create_grid_by_matval</a></li>
+  <li><a href="#pickimg.create_basic_grid" id="toc-pickimg.create_basic_grid" class="nav-link" data-scroll-target="#pickimg.create_basic_grid">PickImg.create_basic_grid</a></li>
+  <li><a href="#pickimg.create_img_with_grid" id="toc-pickimg.create_img_with_grid" class="nav-link" data-scroll-target="#pickimg.create_img_with_grid">PickImg.create_img_with_grid</a></li>
+  <li><a href="#pickimg.forward" id="toc-pickimg.forward" class="nav-link" data-scroll-target="#pickimg.forward">PickImg.forward</a></li>
+  <li><a href="#pickimg.get_cut_matval" id="toc-pickimg.get_cut_matval" class="nav-link" data-scroll-target="#pickimg.get_cut_matval">PickImg.get_cut_matval</a></li>
+  <li><a href="#pickimg.split_img" id="toc-pickimg.split_img" class="nav-link" data-scroll-target="#pickimg.split_img">PickImg.split_img</a></li>
+  </ul></li>
+  <li><a href="#video" id="toc-video" class="nav-link" data-scroll-target="#video">Video</a>
+  <ul class="collapse">
+  <li><a href="#videoget" id="toc-videoget" class="nav-link" data-scroll-target="#videoget">VideoGet</a></li>
+  <li><a href="#load_video" id="toc-load_video" class="nav-link" data-scroll-target="#load_video">load_video</a></li>
+  <li><a href="#get_pets_dataloaders" id="toc-get_pets_dataloaders" class="nav-link" data-scroll-target="#get_pets_dataloaders">get_pets_dataloaders</a></li>
+  <li><a href="#get_one_test_img" id="toc-get_one_test_img" class="nav-link" data-scroll-target="#get_one_test_img">get_one_test_img</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/doucx/wcpdtoolbox/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">vision</h1>
+</div>
+
+<div>
+  <div class="description">
+    对于图片/视频的处理
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> untar_data(url<span class="op">=</span>URLs.PETS)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>imgs <span class="op">=</span> get_image_files(path<span class="op">/</span><span class="st">'images'</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>vid_path <span class="op">=</span> <span class="st">'/ailearn/dataset/video/own/20230127_032459.mp4'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="xyzimg" class="level2">
+<h2 class="anchored" data-anchor-id="xyzimg">xyzimg</h2>
+<p>处理xyz色彩空间的图片</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L11" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="open_img_cv2" class="level3">
+<h3 class="anchored" data-anchor-id="open_img_cv2">open_img_cv2</h3>
+<blockquote class="blockquote">
+<pre><code> open_img_cv2 (path:str)</code></pre>
+</blockquote>
+<p>使用cv2打开图片,并归一化到0~1以保证精度</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L14" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="bgr2xyz" class="level3">
+<h3 class="anchored" data-anchor-id="bgr2xyz">bgr2xyz</h3>
+<blockquote class="blockquote">
+<pre><code> bgr2xyz (img:&lt;built-infunctionarray&gt;)</code></pre>
+</blockquote>
+<p>把图片(float32)转换为xyz色彩空间</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L21" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="open_img_xyz" class="level3">
+<h3 class="anchored" data-anchor-id="open_img_xyz">open_img_xyz</h3>
+<blockquote class="blockquote">
+<pre><code> open_img_xyz (path)</code></pre>
+</blockquote>
+<p>使用xyz色彩空间打开图片</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> open_img_cv2(imgs[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>img.<span class="bu">max</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>0.9607843</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>img2 <span class="op">=</span> open_img_xyz(imgs[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>img2.<span class="bu">max</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>tensor(1.0391)</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L24" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="xyz2rgb" class="level3">
+<h3 class="anchored" data-anchor-id="xyz2rgb">xyz2rgb</h3>
+<blockquote class="blockquote">
+<pre><code> xyz2rgb (img:torch.Tensor)</code></pre>
+</blockquote>
+<p>转换为rgb色彩空间并转换为uint8</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>img3 <span class="op">=</span> xyz2rgb(img2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>img3.<span class="bu">max</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>0.9607848</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>img3.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(1, 400, 600, 3)</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L33" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="show_array_rgb_img" class="level3">
+<h3 class="anchored" data-anchor-id="show_array_rgb_img">show_array_rgb_img</h3>
+<blockquote class="blockquote">
+<pre><code> show_array_rgb_img (img:&lt;built-infunctionarray&gt;)</code></pre>
+</blockquote>
+<p>打开一个rgb图片(PIL)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>show_array_rgb_img(img3)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L45" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="show_xyz_img" class="level3">
+<h3 class="anchored" data-anchor-id="show_xyz_img">show_xyz_img</h3>
+<blockquote class="blockquote">
+<pre><code> show_xyz_img (img:torch.Tensor)</code></pre>
+</blockquote>
+<p>打开一组(n*c*x*y)xyz图片,返回一个列表</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>img2.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>torch.Size([1, 3, 400, 600])</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>show_xyz_img(img2)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-18-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L51" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="img_xyz_pipe" class="level3">
+<h3 class="anchored" data-anchor-id="img_xyz_pipe">img_xyz_pipe</h3>
+<blockquote class="blockquote">
+<pre><code> img_xyz_pipe ()</code></pre>
+</blockquote>
+<p>显示与打开图片的Transform形式</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>imgxyz <span class="op">=</span> img_xyz_pipe()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>imgxyz.decode(imgxyz(imgs[<span class="dv">0</span>]))[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-20-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>imgxyz.decode(imgxyz(imgs[<span class="dv">0</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>(#1) [PILImage mode=RGB size=600x400]</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="pickimg" class="level2">
+<h2 class="anchored" data-anchor-id="pickimg">pickimg</h2>
+<p>对图片进行拾取</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L54" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="pickimg-1" class="level3">
+<h3 class="anchored" data-anchor-id="pickimg-1">PickImg</h3>
+<blockquote class="blockquote">
+<pre><code> PickImg (device='cpu', return_grid=False)</code></pre>
+</blockquote>
+<p>Base class for all neural network modules.</p>
+<p>Your models should also subclass this class.</p>
+<p>Modules can also contain other Modules, allowing to nest them in a tree structure. You can assign the submodules as regular attributes::</p>
+<pre><code>import torch.nn as nn
+import torch.nn.functional as F
+
+class Model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 20, 5)
+        self.conv2 = nn.Conv2d(20, 20, 5)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        return F.relu(self.conv2(x))</code></pre>
+<p>Submodules assigned in this way will be registered, and will have their parameters converted too when you call :meth:<code>to</code>, etc.</p>
+<p>.. note:: As per the example above, an <code>__init__()</code> call to the parent class must be made before assignment on the child.</p>
+<p>:ivar training: Boolean represents whether this module is in training or evaluation mode. :vartype training: bool</p>
+<p>使用F.grid_sample拾取图片的类</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L64" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="pickimg.get_grid_mat" class="level3">
+<h3 class="anchored" data-anchor-id="pickimg.get_grid_mat">PickImg.get_grid_mat</h3>
+<blockquote class="blockquote">
+<pre><code> PickImg.get_grid_mat (val:torch.Tensor=None)</code></pre>
+</blockquote>
+<p>zeta=0, mult_x=1, mult_y=1, offset_x=0, offset_y=0</p>
+<p>使用一组数据获取变换矩阵</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L74" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="pickimg.create_grid" class="level3">
+<h3 class="anchored" data-anchor-id="pickimg.create_grid">PickImg.create_grid</h3>
+<blockquote class="blockquote">
+<pre><code> PickImg.create_grid (mats:torch.Tensor, pick_size:list)</code></pre>
+</blockquote>
+<p>使用矩阵和picksize获取grid</p>
+<p>mats.shape[0]需要与pick_size[0]相等</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L80" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="pickimg.create_grid_by_matval" class="level3">
+<h3 class="anchored" data-anchor-id="pickimg.create_grid_by_matval">PickImg.create_grid_by_matval</h3>
+<blockquote class="blockquote">
+<pre><code> PickImg.create_grid_by_matval (pick_size, matval:torch.Tensor=None)</code></pre>
+</blockquote>
+<p>zeta=0, mult_x=1, mult_y=1, offset_x=0, offset_y=0</p>
+<p>使用一组数据和picksize获取grid</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L87" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="pickimg.create_basic_grid" class="level3">
+<h3 class="anchored" data-anchor-id="pickimg.create_basic_grid">PickImg.create_basic_grid</h3>
+<blockquote class="blockquote">
+<pre><code> PickImg.create_basic_grid (img:torch.Tensor, pick_size:list=None,
+                            permute=False)</code></pre>
+</blockquote>
+<p>使用<code>img</code>和<code>pick_size</code>获取一个基本的grid,相当于缩放到<code>pick_size</code></p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L96" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="pickimg.create_img_with_grid" class="level3">
+<h3 class="anchored" data-anchor-id="pickimg.create_img_with_grid">PickImg.create_img_with_grid</h3>
+<blockquote class="blockquote">
+<pre><code> PickImg.create_img_with_grid (img)</code></pre>
+</blockquote>
+<p>为<code>img</code>产生位置编码</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L100" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="pickimg.forward" class="level3">
+<h3 class="anchored" data-anchor-id="pickimg.forward">PickImg.forward</h3>
+<blockquote class="blockquote">
+<pre><code> PickImg.forward (img:torch.Tensor, pick_size:list=[32, 32], grid=None,
+                  matval=None, padding_mode='reflection', **kwargs)</code></pre>
+</blockquote>
+<p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<p>.. note:: Although the recipe for forward pass needs to be defined within this function, one should call the :class:<code>Module</code> instance afterwards instead of this since the former takes care of running the registered hooks while the latter silently ignores them.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>img</td>
+<td>Tensor</td>
+<td></td>
+<td>4d img</td>
+</tr>
+<tr class="even">
+<td>pick_size</td>
+<td>list</td>
+<td>[32, 32]</td>
+<td>like [32, 32]</td>
+</tr>
+<tr class="odd">
+<td>grid</td>
+<td>NoneType</td>
+<td>None</td>
+<td>Size([n,x,y,c])</td>
+</tr>
+<tr class="even">
+<td>matval</td>
+<td>NoneType</td>
+<td>None</td>
+<td>like [[0,0,0,0,0]]</td>
+</tr>
+<tr class="odd">
+<td>padding_mode</td>
+<td>str</td>
+<td>reflection</td>
+<td>padding_mode</td>
+</tr>
+<tr class="even">
+<td>kwargs</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Returns</strong></td>
+<td><strong>Tensor</strong></td>
+<td></td>
+<td><strong>grid_sample’s kwarg</strong></td>
+</tr>
+</tbody>
+</table>
+<p>使用F.grid_sample拾取图片</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L130" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="pickimg.get_cut_matval" class="level3">
+<h3 class="anchored" data-anchor-id="pickimg.get_cut_matval">PickImg.get_cut_matval</h3>
+<blockquote class="blockquote">
+<pre><code> PickImg.get_cut_matval (n_x, n_y, return_tensor=True)</code></pre>
+</blockquote>
+<p>使用n_x与n_y获取切分图片的矩阵(matval)</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L149" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="pickimg.split_img" class="level3">
+<h3 class="anchored" data-anchor-id="pickimg.split_img">PickImg.split_img</h3>
+<blockquote class="blockquote">
+<pre><code> PickImg.split_img (img:torch.Tensor, n_x:int, n_y:int, pick_size:list,
+                    return_matval=True, **kwargs)</code></pre>
+</blockquote>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>img</td>
+<td>Tensor</td>
+<td></td>
+<td>to use img(4d, batch now not work)</td>
+</tr>
+<tr class="even">
+<td>n_x</td>
+<td>int</td>
+<td></td>
+<td>x split</td>
+</tr>
+<tr class="odd">
+<td>n_y</td>
+<td>int</td>
+<td></td>
+<td>y split</td>
+</tr>
+<tr class="even">
+<td>pick_size</td>
+<td>list</td>
+<td></td>
+<td>like [32,32], every img’s size</td>
+</tr>
+<tr class="odd">
+<td>return_matval</td>
+<td>bool</td>
+<td>True</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>kwargs</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>pick <span class="op">=</span> PickImg()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>缩放至尺寸</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>picked_img <span class="op">=</span> pick(img2)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>show_xyz_img(picked_img)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-32-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>使用matval:zeta=0, mult_x=1, mult_y=1, offset_x=0, offset_y=0</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>picked_img <span class="op">=</span> pick(img2, [<span class="dv">64</span>,<span class="dv">64</span>], matval<span class="op">=</span>pick.mat_val<span class="op">+</span><span class="fl">0.2</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>show_xyz_img(picked_img)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-33-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>splited_img, matval <span class="op">=</span> pick.split_img(img2[<span class="dv">0</span>],<span class="dv">2</span>,<span class="dv">2</span>,[<span class="dv">32</span>,<span class="dv">32</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> im <span class="kw">in</span> show_xyz_img(splited_img): im.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-35-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-35-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-35-output-3.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-35-output-4.png" class="img-fluid"></p>
+</div>
+</div>
+<p>组装回原图</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> VideoGet:</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                 src, <span class="co"># 视频路径,可以为本地地址或网络摄像头</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                 queue <span class="co"># 队列</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                ):</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.stream <span class="op">=</span> cv2.VideoCapture(src)</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.grabbed, <span class="va">self</span>.frame <span class="op">=</span> <span class="va">self</span>.stream.read()</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.stopped <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.q <span class="op">=</span> queue</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>        frame <span class="op">=</span> <span class="va">self</span>.frame</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.q.put(frame)</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> start(<span class="va">self</span>):</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.t <span class="op">=</span> Thread(target<span class="op">=</span><span class="va">self</span>._get, args<span class="op">=</span>())</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.t.start()</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _get(<span class="va">self</span>):</span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span> <span class="kw">not</span> <span class="va">self</span>.stopped:</span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">not</span> <span class="va">self</span>.grabbed:</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>                <span class="va">self</span>.stop()</span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>                <span class="va">self</span>.grabbed, <span class="va">self</span>.frame <span class="op">=</span> <span class="va">self</span>.stream.read()</span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>                frame <span class="op">=</span> <span class="va">self</span>.frame</span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>                <span class="va">self</span>.q.put(frame)</span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> stop(<span class="va">self</span>):</span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.stopped <span class="op">=</span> <span class="va">True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>splited_img2.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>torch.Size([3, 64, 64])</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_video(src, <span class="co"># 视频路径,可以为本地地址或网络摄像头</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>               max_frame<span class="op">=</span><span class="va">None</span> <span class="co"># 队列与拾取的上限</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>              ):</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    q <span class="op">=</span> Queue(max_frame <span class="cf">if</span> max_frame <span class="op">!=</span> <span class="va">None</span> <span class="cf">else</span> <span class="dv">0</span>)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> VideoGet(src, q)</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    l <span class="op">=</span> [q.get()[<span class="va">None</span>,:]]</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    v.start()</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    t <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># time.sleep(0.2)</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span>((v.stopped) <span class="kw">and</span> q.empty() <span class="kw">or</span> ((t <span class="op">&gt;=</span> max_frame) <span class="cf">if</span> max_frame <span class="op">!=</span> <span class="va">None</span> <span class="cf">else</span> <span class="va">False</span>)):</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>            frame <span class="op">=</span> q.get()</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">not</span> frame <span class="kw">is</span> <span class="va">None</span>: </span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>                l.append(frame[<span class="va">None</span>,:])</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>                t <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>            v.stop()</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.vstack(<span class="bu">tuple</span>(l))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-38-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="video" class="level2">
+<h2 class="anchored" data-anchor-id="video">Video</h2>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L166" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<section id="videoget" class="level3">
+<h3 class="anchored" data-anchor-id="videoget">VideoGet</h3>
+<blockquote class="blockquote">
+<pre><code> VideoGet (src, queue)</code></pre>
+</blockquote>
+<p>Initialize self. See help(type(self)) for accurate signature.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>src</td>
+<td>视频路径,可以为本地地址或网络摄像头</td>
+</tr>
+<tr class="even">
+<td>queue</td>
+<td>队列</td>
+</tr>
+</tbody>
+</table>
+<p>使用opencv打开视频,使用队列和线程</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L197" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="load_video" class="level3">
+<h3 class="anchored" data-anchor-id="load_video">load_video</h3>
+<blockquote class="blockquote">
+<pre><code> load_video (src, max_frame=None)</code></pre>
+</blockquote>
+<table class="table">
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Type</strong></th>
+<th><strong>Default</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>src</td>
+<td></td>
+<td></td>
+<td>视频路径,可以为本地地址或网络摄像头</td>
+</tr>
+<tr class="even">
+<td>max_frame</td>
+<td>NoneType</td>
+<td>None</td>
+<td>队列与拾取的上限</td>
+</tr>
+</tbody>
+</table>
+<p>把打开的视频转换为np数组</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_pets_dataloaders(len_items<span class="op">=</span><span class="dv">800</span>, randomseed<span class="op">=</span><span class="dv">42</span>, item_tfms_size<span class="op">=</span><span class="dv">460</span>, batch_tfms_size<span class="op">=</span><span class="dv">460</span>, batch_tfms_min_scale<span class="op">=</span><span class="fl">0.75</span>, <span class="op">**</span>kwarg):</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> untar_data(URLs.PETS)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    pets <span class="op">=</span> DataBlock(blocks <span class="op">=</span> (ImageBlock, CategoryBlock),</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                     get_items<span class="op">=</span>(<span class="kw">lambda</span> x:get_image_files(x)[:len_items]), </span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                     splitter<span class="op">=</span>RandomSplitter(seed<span class="op">=</span>randomseed),</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>                     get_y<span class="op">=</span>using_attr(RegexLabeller(<span class="vs">r'(.+)_\d+.jpg$'</span>), <span class="st">'name'</span>),</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                     item_tfms<span class="op">=</span>Resize(item_tfms_size),</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>                     batch_tfms<span class="op">=</span>aug_transforms(size<span class="op">=</span>batch_tfms_size, min_scale<span class="op">=</span>batch_tfms_min_scale))</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>    dls <span class="op">=</span> pets.dataloaders(path<span class="op">/</span><span class="st">"images"</span>, <span class="op">**</span>kwarg)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dls</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>l.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>TODO<br>
+使用ffmpeg保存视频</p>
+<p>def get_one_test_img(imgs=None): pick_one = lambda l:l[random.randint(0, len(l)-1)] if not imgs is None: return open_img_xyz(pick_one(imgs)) else: path = untar_data(URLs.PETS) imgs = get_image_files(path/‘images’) return open_img_xyz(pick_one(imgs))</p>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L219" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="get_pets_dataloaders" class="level3">
+<h3 class="anchored" data-anchor-id="get_pets_dataloaders">get_pets_dataloaders</h3>
+<blockquote class="blockquote">
+<pre><code> get_pets_dataloaders (len_items=800, randomseed=42, item_tfms_size=460,
+                       batch_tfms_size=460, batch_tfms_min_scale=0.75,
+                       **kwarg)</code></pre>
+</blockquote>
+<p>获取一个pets数据集的dataloaders,用于cv测试</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>dls <span class="op">=</span> get_pets_dataloaders(<span class="dv">128</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/conda/lib/python3.8/site-packages/torch/cuda/__init__.py:497: UserWarning: Can't initialize NVML
+  warnings.warn("Can't initialize NVML")</code></pre>
+</div>
+</div>
+<hr>
+<p><a href="https://github.com/doucx/wcpdtoolbox/blob/main/wcpdtoolbox/vision.py#L231" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="get_one_test_img" class="level3">
+<h3 class="anchored" data-anchor-id="get_one_test_img">get_one_test_img</h3>
+<blockquote class="blockquote">
+<pre><code> get_one_test_img (imgs=None)</code></pre>
+</blockquote>
+<p>从pets数据集或<code>imgs</code>随机提取并产生一张xyz色彩空间的图片(tensor)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> get_one_test_img()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>show_xyz_img(img)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="00_vision_files/figure-html/cell-47-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

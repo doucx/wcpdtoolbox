@@ -1,0 +1,93 @@
+[
+  {
+    "objectID": "audio.html",
+    "href": "audio.html",
+    "title": "Audio",
+    "section": "",
+    "text": "对音频的处理"
+  },
+  {
+    "objectID": "audio.html#voice",
+    "href": "audio.html#voice",
+    "title": "Audio",
+    "section": "voice",
+    "text": "voice\n使用耳朵听\n\naudio_path = '/ailearn/dataset/voice_dataset/ESC-50-master/audio/'\naudios = globtastic(audio_path)\n\n\naudios\n\n(#2000) ['/ailearn/dataset/voice_dataset/ESC-50-master/audio/1-100032-A-0.wav','/ailearn/dataset/voice_dataset/ESC-50-master/audio/1-100038-A-14.wav','/ailearn/dataset/voice_dataset/ESC-50-master/audio/1-100210-A-36.wav','/ailearn/dataset/voice_dataset/ESC-50-master/audio/1-100210-B-36.wav','/ailearn/dataset/voice_dataset/ESC-50-master/audio/1-101296-A-19.wav','/ailearn/dataset/voice_dataset/ESC-50-master/audio/1-101296-B-19.wav','/ailearn/dataset/voice_dataset/ESC-50-master/audio/1-101336-A-30.wav','/ailearn/dataset/voice_dataset/ESC-50-master/audio/1-101404-A-34.wav','/ailearn/dataset/voice_dataset/ESC-50-master/audio/1-103298-A-9.wav','/ailearn/dataset/voice_dataset/ESC-50-master/audio/1-103995-A-30.wav'...]\n\n\n\nsource\n\nget_wav_raw\n\n get_wav_raw (path)\n\n\ntest_audio = get_wav_raw(audios[0])\n\n\nsource\n\n\nget_mp3_raw\n\n get_mp3_raw (path:str)\n\nLike get_wav_raw, but use mp3\n\nsource\n\n\nexport_wav\n\n export_wav (arr:<built-infunctionarray>, name, rate:int=32000)\n\n\nb = io.BytesIO()\nexport_wav(test_audio, b)\n\n\nsource\n\n\nplay_arr\n\n play_arr (arr:<built-infunctionarray>, rate:int=32000)\n\narray->wav->BytesIO,播放\n\nplay_arr(test_audio)\n\n\n                    \n                        \n                        Your browser does not support the audio element.\n                    \n                  \n\n\n\nsource\n\n\nplay_tensor\n\n play_tensor (tensor:torch.Tensor, rate:int=32000)\n\n\ntensor_audio = torch.from_numpy(test_audio)\n\n/tmp/ipykernel_4759/2106778904.py:1: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:205.)\n  tensor_audio = torch.from_numpy(test_audio)\n\n\n\nplay_tensor(tensor_audio)\n\n\n                    \n                        \n                        Your browser does not support the audio element."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "WcpDToolBox",
+    "section": "",
+    "text": "这是一个工具包,包含有对我而言的实用工具\n基于fastai等"
+  },
+  {
+    "objectID": "index.html#安装",
+    "href": "index.html#安装",
+    "title": "WcpDToolBox",
+    "section": "安装",
+    "text": "安装\ngit clone https://github.com/doucx/wcpdtoolbox.git\ncd wcpdtoolbox\npip install ."
+  },
+  {
+    "objectID": "index.html#使用",
+    "href": "index.html#使用",
+    "title": "WcpDToolBox",
+    "section": "使用",
+    "text": "使用\n见wcpdtoolbox"
+  },
+  {
+    "objectID": "visualization.html",
+    "href": "visualization.html",
+    "title": "visualization",
+    "section": "",
+    "text": "from fastai.test_utils import *"
+  },
+  {
+    "objectID": "visualization.html#callback",
+    "href": "visualization.html#callback",
+    "title": "visualization",
+    "section": "Callback",
+    "text": "Callback\n\nsource\n\nGradShowCallback\n\n GradShowCallback (l=None, show=True)\n\nBasic class handling tweaks of the training loop by changing a Learner in various events\n显示各层的grad曲线\ngrad.abs().mean()\n\ndef get_pets_dataloaders(len_items=800, randomseed=42, item_tfms_size=460, batch_tfms_size=460, batch_tfms_min_scale=0.75, **kwarg):\n    path = untar_data(URLs.PETS)\n    pets = DataBlock(blocks = (ImageBlock, CategoryBlock),\n                     get_items=(lambda x:get_image_files(x)[:len_items]), \n                     splitter=RandomSplitter(seed=randomseed),\n                     get_y=using_attr(RegexLabeller(r'(.+)_\\d+.jpg$'), 'name'),\n                     item_tfms=Resize(item_tfms_size),\n                     batch_tfms=aug_transforms(size=batch_tfms_size, min_scale=batch_tfms_min_scale))\n    dls = pets.dataloaders(path/\"images\", **kwarg)\n    return dls\n\n\ndls = get_pets_dataloaders()\n\n\nlearner = vision_learner(dls, resnet18)\n\n/opt/conda/lib/python3.8/site-packages/torchvision/models/_utils.py:208: UserWarning:\n\nThe parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.\n\n/opt/conda/lib/python3.8/site-packages/torchvision/models/_utils.py:223: UserWarning:\n\nArguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.\n\n\n\n\nl = L()\n\n\nlearner.fine_tune(3, cbs=GradShowCallback(l))\n\n\n\n\n\n\n\n  \n    \n      epoch\n      train_loss\n      valid_loss\n      time\n    \n  \n  \n    \n      0\n      0.133676\n      0.263481\n      00:07\n    \n  \n\n\n\n\n                                                \n\n\n\n\n\n\n\n\n  \n    \n      epoch\n      train_loss\n      valid_loss\n      time\n    \n  \n  \n    \n      0\n      0.118141\n      0.295313\n      00:10\n    \n    \n      1\n      0.103426\n      0.179227\n      00:10\n    \n    \n      2\n      0.086377\n      0.191343\n      00:10\n    \n  \n\n\n\n\n                                                \n\n\n\nlen(l)\n\n70"
+  },
+  {
+    "objectID": "data.html",
+    "href": "data.html",
+    "title": "Data",
+    "section": "",
+    "text": "source\n\npick_one\n\n pick_one (l)\n\n从给的列表(有len和getitem方法的对象)里随机提取一个项目\n\npath = untar_data(url=URLs.PETS)\nimgs = get_image_files(path/'images')\n\n\npick_one(imgs)\n\nPath('/root/.fastai/data/oxford-iiit-pet/images/saint_bernard_186.jpg')"
+  },
+  {
+    "objectID": "model.html",
+    "href": "model.html",
+    "title": "Model",
+    "section": "",
+    "text": "一个树的结构\n\nsource\n\n\n\n BasicLeaf (*args, up=None, show_feature=False, all_leaf=None)\n\nInitialize self. See help(type(self)) for accurate signature.\n\nleaf = BasicLeaf()\nfor i in range(3):\n    all_leaf = leaf.all_leaf.copy()\n    for m in all_leaf: m.add_leaf()\nleaf.show()"
+  },
+  {
+    "objectID": "vision.html",
+    "href": "vision.html",
+    "title": "vision",
+    "section": "",
+    "text": "path = untar_data(url=URLs.PETS)\nimgs = get_image_files(path/'images')\nvid_path = '/ailearn/dataset/video/own/20230127_032459.mp4'"
+  },
+  {
+    "objectID": "vision.html#xyzimg",
+    "href": "vision.html#xyzimg",
+    "title": "vision",
+    "section": "xyzimg",
+    "text": "xyzimg\n处理xyz色彩空间的图片\n\nsource\n\nopen_img_cv2\n\n open_img_cv2 (path:str)\n\n使用cv2打开图片,并归一化到0~1以保证精度\n\nsource\n\n\nbgr2xyz\n\n bgr2xyz (img:<built-infunctionarray>)\n\n把图片(float32)转换为xyz色彩空间\n\nsource\n\n\nopen_img_xyz\n\n open_img_xyz (path)\n\n使用xyz色彩空间打开图片\n\nimg = open_img_cv2(imgs[0])\n\n\nimg.max()\n\n0.9607843\n\n\n\nimg2 = open_img_xyz(imgs[0])\n\n\nimg2.max()\n\ntensor(1.0391)\n\n\n\nsource\n\n\nxyz2rgb\n\n xyz2rgb (img:torch.Tensor)\n\n转换为rgb色彩空间并转换为uint8\n\nimg3 = xyz2rgb(img2)\n\n\nimg3.max()\n\n0.9607848\n\n\n\nimg3.shape\n\n(1, 400, 600, 3)\n\n\n\nsource\n\n\nshow_array_rgb_img\n\n show_array_rgb_img (img:<built-infunctionarray>)\n\n打开一个rgb图片(PIL)\n\nshow_array_rgb_img(img3)[0]\n\n\n\n\n\nsource\n\n\nshow_xyz_img\n\n show_xyz_img (img:torch.Tensor)\n\n打开一组(n*c*x*y)xyz图片,返回一个列表\n\nimg2.shape\n\ntorch.Size([1, 3, 400, 600])\n\n\n\nshow_xyz_img(img2)[0]\n\n\n\n\n\nsource\n\n\nimg_xyz_pipe\n\n img_xyz_pipe ()\n\n显示与打开图片的Transform形式\n\nimgxyz = img_xyz_pipe()\nimgxyz.decode(imgxyz(imgs[0]))[0]\n\n\n\n\n\nimgxyz.decode(imgxyz(imgs[0]))\n\n(#1) [PILImage mode=RGB size=600x400]"
+  },
+  {
+    "objectID": "vision.html#pickimg",
+    "href": "vision.html#pickimg",
+    "title": "vision",
+    "section": "pickimg",
+    "text": "pickimg\n对图片进行拾取\n\nsource\n\nPickImg\n\n PickImg (device='cpu', return_grid=False)\n\nBase class for all neural network modules.\nYour models should also subclass this class.\nModules can also contain other Modules, allowing to nest them in a tree structure. You can assign the submodules as regular attributes::\nimport torch.nn as nn\nimport torch.nn.functional as F\n\nclass Model(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.conv1 = nn.Conv2d(1, 20, 5)\n        self.conv2 = nn.Conv2d(20, 20, 5)\n\n    def forward(self, x):\n        x = F.relu(self.conv1(x))\n        return F.relu(self.conv2(x))\nSubmodules assigned in this way will be registered, and will have their parameters converted too when you call :meth:to, etc.\n.. note:: As per the example above, an __init__() call to the parent class must be made before assignment on the child.\n:ivar training: Boolean represents whether this module is in training or evaluation mode. :vartype training: bool\n使用F.grid_sample拾取图片的类\n\nsource\n\n\nPickImg.get_grid_mat\n\n PickImg.get_grid_mat (val:torch.Tensor=None)\n\nzeta=0, mult_x=1, mult_y=1, offset_x=0, offset_y=0\n使用一组数据获取变换矩阵\n\nsource\n\n\nPickImg.create_grid\n\n PickImg.create_grid (mats:torch.Tensor, pick_size:list)\n\n使用矩阵和picksize获取grid\nmats.shape[0]需要与pick_size[0]相等\n\nsource\n\n\nPickImg.create_grid_by_matval\n\n PickImg.create_grid_by_matval (pick_size, matval:torch.Tensor=None)\n\nzeta=0, mult_x=1, mult_y=1, offset_x=0, offset_y=0\n使用一组数据和picksize获取grid\n\nsource\n\n\nPickImg.create_basic_grid\n\n PickImg.create_basic_grid (img:torch.Tensor, pick_size:list=None,\n                            permute=False)\n\n使用img和pick_size获取一个基本的grid,相当于缩放到pick_size\n\nsource\n\n\nPickImg.create_img_with_grid\n\n PickImg.create_img_with_grid (img)\n\n为img产生位置编码\n\nsource\n\n\nPickImg.forward\n\n PickImg.forward (img:torch.Tensor, pick_size:list=[32, 32], grid=None,\n                  matval=None, padding_mode='reflection', **kwargs)\n\nDefines the computation performed at every call.\nShould be overridden by all subclasses.\n.. note:: Although the recipe for forward pass needs to be defined within this function, one should call the :class:Module instance afterwards instead of this since the former takes care of running the registered hooks while the latter silently ignores them.\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimg\nTensor\n\n4d img\n\n\npick_size\nlist\n[32, 32]\nlike [32, 32]\n\n\ngrid\nNoneType\nNone\nSize([n,x,y,c])\n\n\nmatval\nNoneType\nNone\nlike [[0,0,0,0,0]]\n\n\npadding_mode\nstr\nreflection\npadding_mode\n\n\nkwargs\n\n\n\n\n\nReturns\nTensor\n\ngrid_sample’s kwarg\n\n\n\n使用F.grid_sample拾取图片\n\nsource\n\n\nPickImg.get_cut_matval\n\n PickImg.get_cut_matval (n_x, n_y, return_tensor=True)\n\n使用n_x与n_y获取切分图片的矩阵(matval)\n\nsource\n\n\nPickImg.split_img\n\n PickImg.split_img (img:torch.Tensor, n_x:int, n_y:int, pick_size:list,\n                    return_matval=True, **kwargs)\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimg\nTensor\n\nto use img(4d, batch now not work)\n\n\nn_x\nint\n\nx split\n\n\nn_y\nint\n\ny split\n\n\npick_size\nlist\n\nlike [32,32], every img’s size\n\n\nreturn_matval\nbool\nTrue\n\n\n\nkwargs\n\n\n\n\n\n\n\npick = PickImg()\n\n缩放至尺寸\n\npicked_img = pick(img2)\nshow_xyz_img(picked_img)[0]\n\n\n\n\n使用matval:zeta=0, mult_x=1, mult_y=1, offset_x=0, offset_y=0\n\npicked_img = pick(img2, [64,64], matval=pick.mat_val+0.2)\nshow_xyz_img(picked_img)[0]\n\n\n\n\n\nsplited_img, matval = pick.split_img(img2[0],2,2,[32,32])\n\n\nfor im in show_xyz_img(splited_img): im.show()\n\n\n\n\n\n\n\n\n\n\n\n\n\n组装回原图\n\nclass VideoGet:\n    def __init__(self, \n                 src, # 视频路径,可以为本地地址或网络摄像头\n                 queue # 队列\n                ):\n        \n        self.stream = cv2.VideoCapture(src)\n        self.grabbed, self.frame = self.stream.read()\n        self.stopped = False\n        self.q = queue\n        \n        frame = self.frame\n        self.q.put(frame)\n    \n    def start(self):\n        self.t = Thread(target=self._get, args=())\n        self.t.start()\n\n    def _get(self):\n        while not self.stopped:\n            if not self.grabbed:\n                self.stop()\n            else:\n                self.grabbed, self.frame = self.stream.read()\n                frame = self.frame\n                self.q.put(frame)\n\n    def stop(self):\n        self.stopped = True\n\n\nsplited_img2.shape\n\ntorch.Size([3, 64, 64])\n\n\n\ndef load_video(src, # 视频路径,可以为本地地址或网络摄像头\n               max_frame=None # 队列与拾取的上限\n              ):\n    t = 0\n    q = Queue(max_frame if max_frame != None else 0)\n    v = VideoGet(src, q)\n    l = [q.get()[None,:]]\n    v.start()\n    t += 1\n    # time.sleep(0.2)\n    while True:\n        if not((v.stopped) and q.empty() or ((t >= max_frame) if max_frame != None else False)):\n            frame = q.get()\n            if not frame is None: \n                l.append(frame[None,:])\n                t += 1\n        else:\n            v.stop()\n            break\n    return np.vstack(tuple(l))"
+  },
+  {
+    "objectID": "vision.html#video",
+    "href": "vision.html#video",
+    "title": "vision",
+    "section": "Video",
+    "text": "Video\n\nsource\n\nVideoGet\n\n VideoGet (src, queue)\n\nInitialize self. See help(type(self)) for accurate signature.\n\n\n\n\nDetails\n\n\n\n\nsrc\n视频路径,可以为本地地址或网络摄像头\n\n\nqueue\n队列\n\n\n\n使用opencv打开视频,使用队列和线程\n\nsource\n\n\nload_video\n\n load_video (src, max_frame=None)\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nsrc\n\n\n视频路径,可以为本地地址或网络摄像头\n\n\nmax_frame\nNoneType\nNone\n队列与拾取的上限\n\n\n\n把打开的视频转换为np数组\n\ndef get_pets_dataloaders(len_items=800, randomseed=42, item_tfms_size=460, batch_tfms_size=460, batch_tfms_min_scale=0.75, **kwarg):\n    path = untar_data(URLs.PETS)\n    pets = DataBlock(blocks = (ImageBlock, CategoryBlock),\n                     get_items=(lambda x:get_image_files(x)[:len_items]), \n                     splitter=RandomSplitter(seed=randomseed),\n                     get_y=using_attr(RegexLabeller(r'(.+)_\\d+.jpg$'), 'name'),\n                     item_tfms=Resize(item_tfms_size),\n                     batch_tfms=aug_transforms(size=batch_tfms_size, min_scale=batch_tfms_min_scale))\n    dls = pets.dataloaders(path/\"images\", **kwarg)\n    return dls\n\n\nl.shape\n\nTODO\n使用ffmpeg保存视频\ndef get_one_test_img(imgs=None): pick_one = lambda l:l[random.randint(0, len(l)-1)] if not imgs is None: return open_img_xyz(pick_one(imgs)) else: path = untar_data(URLs.PETS) imgs = get_image_files(path/‘images’) return open_img_xyz(pick_one(imgs))\n\nsource\n\n\nget_pets_dataloaders\n\n get_pets_dataloaders (len_items=800, randomseed=42, item_tfms_size=460,\n                       batch_tfms_size=460, batch_tfms_min_scale=0.75,\n                       **kwarg)\n\n获取一个pets数据集的dataloaders,用于cv测试\n\ndls = get_pets_dataloaders(128)\n\n/opt/conda/lib/python3.8/site-packages/torch/cuda/__init__.py:497: UserWarning: Can't initialize NVML\n  warnings.warn(\"Can't initialize NVML\")\n\n\n\nsource\n\n\nget_one_test_img\n\n get_one_test_img (imgs=None)\n\n从pets数据集或imgs随机提取并产生一张xyz色彩空间的图片(tensor)\n\nimg = get_one_test_img()\n\n\nshow_xyz_img(img)[0]"
+  }
+]
