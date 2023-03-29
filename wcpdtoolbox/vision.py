@@ -162,7 +162,7 @@ def split_img(self: PickImg,
     if return_matval: return imgs,pick_mat
     else: imgs
 
-# %% ../nbs/00_vision.ipynb 59
+# %% ../nbs/00_vision.ipynb 63
 class VideoGet:
     def __init__(self, 
                  src, # 视频路径,可以为本地地址或网络摄像头
@@ -193,7 +193,7 @@ class VideoGet:
     def stop(self):
         self.stopped = True
 
-# %% ../nbs/00_vision.ipynb 61
+# %% ../nbs/00_vision.ipynb 65
 def load_video(src, # 视频路径,可以为本地地址或网络摄像头
                max_frame=None # 队列与拾取的上限
               ):
@@ -215,7 +215,7 @@ def load_video(src, # 视频路径,可以为本地地址或网络摄像头
             break
     return np.vstack(tuple(l))
 
-# %% ../nbs/00_vision.ipynb 67
+# %% ../nbs/00_vision.ipynb 71
 def get_pets_dataloaders(len_items=800, randomseed=42, item_tfms_size=460, batch_tfms_size=460, batch_tfms_min_scale=0.75, **kwarg):
     path = untar_data(URLs.PETS)
     pets = DataBlock(blocks = (ImageBlock, CategoryBlock),
@@ -227,7 +227,7 @@ def get_pets_dataloaders(len_items=800, randomseed=42, item_tfms_size=460, batch
     dls = pets.dataloaders(path/"images", **kwarg)
     return dls
 
-# %% ../nbs/00_vision.ipynb 70
+# %% ../nbs/00_vision.ipynb 74
 def get_one_test_img(imgs=None):
     pick_one = lambda l:l[random.randint(0, len(l)-1)]
     if not imgs is None:
