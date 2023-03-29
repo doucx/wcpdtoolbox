@@ -58,15 +58,14 @@ class PickImg(nn.Module):
         self.mat_val = torch.tensor([[0, 1, 1, 0, 0.]]).to(device)
         self.to(device)
         self.return_grid = return_grid
-        # self.comb_grid = comb_grid
 
 # %% ../nbs/00_vision.ipynb 36
 @patch()
 def get_grid_mat(self:PickImg, val:Tensor=None):
     if val == None:
         val = self.mat_val
-    s0 = torch.stack([torch.cos(val[:, 0])/val[:, 1], -torch.sin(val[:, 0])/val[:, 1], val[:, 3]])
-    s1 = torch.stack([torch.sin(val[:, 0])/val[:, 2], torch.cos(val[:, 0])/val[:, 2], val[:, 4]])
+    s0 = torch.stack([torch.cos(val[:, 0])*val[:, 1], -torch.sin(val[:, 0])*val[:, 1], val[:, 3]])
+    s1 = torch.stack([torch.sin(val[:, 0])*val[:, 2], torch.cos(val[:, 0])*val[:, 2], val[:, 4]])
     s = torch.stack([s0, s1]).permute(2, 0, 1).reshape(-1, 2, 3)
     return s.to(self.device)
 
@@ -126,7 +125,44 @@ def forward(self:PickImg,
     img = F.grid_sample(img, grid, padding_mode=padding_mode, **kwargs).to(self.device)
     return (img, grid) if self.return_grid else img
 
-# %% ../nbs/00_vision.ipynb 55
+# %% ../nbs/00_vision.ipynb 48
+@patch
+def get_cut_matval(self:PickImg,
+                   n_x, 
+                   n_y, 
+                   return_tensor=True
+                  ):
+    m_x = np.arange(n_x).reshape(1,-1).repeat(n_y, 0)
+    m_y = np.arange(n_y).reshape(1,-1).repeat(n_x, 0).T
+    
+    m_x1 = (2*m_x+1)/n_x-1
+    m_y1 = (2*m_y+1)/n_y-1
+    
+    mat = np.stack((m_x1,m_y1)).reshape(2,-1).T
+    head = array([0,1/n_x,1/n_y]).reshape(1,-1).repeat(mat.shape[0],0)
+    
+    mat1 = np.hstack([head, mat])
+    return torch.from_numpy(mat1) if return_tensor else mat1
+
+# %% ../nbs/00_vision.ipynb 50
+@patch
+def split_img(self: PickImg,
+              img: Tensor, # to use img(4d, batch now not work)
+              n_x: int, # x split
+              n_y: int, # y split
+              pick_size: list, # like [32,32], every img's size
+              return_matval = True,
+              **kwargs
+              ):
+    if len(img.shape) == 4 and img.shape[0] > 1:
+        raise ValueError("can only process one img")
+    if len(img.shape) == 3: img = torch.unsqueeze(img, 0)
+    pick_mat = self.get_cut_matval(n_x, n_y)
+    imgs = self.forward(img=img, matval=pick_mat, pick_size=pick_size, **kwargs)
+    if return_matval: return imgs,pick_mat
+    else: imgs
+
+# %% ../nbs/00_vision.ipynb 59
 class VideoGet:
     def __init__(self, 
                  src, # 视频路径,可以为本地地址或网络摄像头
@@ -157,7 +193,7 @@ class VideoGet:
     def stop(self):
         self.stopped = True
 
-# %% ../nbs/00_vision.ipynb 57
+# %% ../nbs/00_vision.ipynb 61
 def load_video(src, # 视频路径,可以为本地地址或网络摄像头
                max_frame=None # 队列与拾取的上限
               ):
@@ -179,7 +215,7 @@ def load_video(src, # 视频路径,可以为本地地址或网络摄像头
             break
     return np.vstack(tuple(l))
 
-# %% ../nbs/00_vision.ipynb 63
+# %% ../nbs/00_vision.ipynb 67
 def get_pets_dataloaders(len_items=800, randomseed=42, item_tfms_size=460, batch_tfms_size=460, batch_tfms_min_scale=0.75, **kwarg):
     path = untar_data(URLs.PETS)
     pets = DataBlock(blocks = (ImageBlock, CategoryBlock),
@@ -191,7 +227,7 @@ def get_pets_dataloaders(len_items=800, randomseed=42, item_tfms_size=460, batch
     dls = pets.dataloaders(path/"images", **kwarg)
     return dls
 
-# %% ../nbs/00_vision.ipynb 66
+# %% ../nbs/00_vision.ipynb 70
 def get_one_test_img(imgs=None):
     pick_one = lambda l:l[random.randint(0, len(l)-1)]
     if not imgs is None:
